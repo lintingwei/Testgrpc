@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using Calculator;
 using Grpc.Net.Client;
-using GrpcGreeterClient;
 
-// The port number must match the port of the gRPC server.
 using var channel = GrpcChannel.ForAddress("https://localhost:7286");
-var client = new Greeter.GreeterClient(channel);
-var reply = await client.SayHelloAsync(
-    new HelloRequest { Name = "GreeterClient" });
-Console.WriteLine("Greeting: " + reply.Message);
-Console.WriteLine("Press any key to exit...");
+
+var calculatorClient = new Calculator.Calculator.CalculatorClient(channel);
+
+var addRequest = new AddRequest()
+{
+    Number1 = 10,
+    Number2 = 33
+};
+var addResponse = await calculatorClient.AddAsync(addRequest);
+Console.WriteLine($"Add {addRequest.Number1} and {addRequest.Number2} : {addResponse.Sum}");
+
 Console.ReadKey();
